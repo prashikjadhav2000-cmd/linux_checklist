@@ -1,7 +1,7 @@
 ---
 - name: Linux server checklist
   hosts: all
-  become: yes
+  # become: yes
 
   tasks:
     - name: Show os details
