@@ -6,7 +6,7 @@
   tasks:
     - name: Show os details
       debug: 
-        msg:"OS:{{ansible_distribution}} {{ansible_distribution_version}}"
+        msg: "OS:{{ansible_distribution}} {{ansible_distribution_version}}"
         
     - name: show hostname
       debug: 
