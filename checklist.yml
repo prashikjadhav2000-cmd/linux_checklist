@@ -1,13 +1,65 @@
----
-- name: Linux server checklist
+- name: Linux System Checklist
   hosts: all
-  # become: yes
+  gather_facts: true
+  become: false   # set true only if needed
 
   tasks:
-    - name: Show os details
-      debug: 
-        msg: "OS:{{ansible_distribution}} {{ansible_distribution_version}}"
-        
-    - name: show hostname
-      debug: 
-        msg: "Hostname:{{ansible_hostname}}"    
+
+    - name: Show OS details
+      debug:
+        msg: "OS: {{ ansible_distribution }} {{ ansible_distribution_version }}"
+
+    - name: Show kernel version
+      debug:
+        msg: "Kernel: {{ ansible_kernel }}"
+
+    - name: Show hostname
+      debug:
+        msg: "Hostname: {{ ansible_hostname }}"
+
+    - name: Show architecture
+      debug:
+        msg: "Architecture: {{ ansible_architecture }}"
+
+    - name: Show CPU details
+      debug:
+        msg: "CPUs: {{ ansible_processor_vcpus }}"
+
+    - name: Show total memory
+      debug:
+        msg: "Memory: {{ ansible_memtotal_mb }} MB"
+
+    - name: Show disk usage
+      command: df -h
+      register: disk_usage
+
+    - name: Print disk usage
+      debug:
+        var: disk_usage.stdout_lines
+
+    - name: Show uptime
+      command: uptime
+      register: uptime_out
+
+    - name: Print uptime
+      debug:
+        var: uptime_out.stdout
+
+    - name: Check SELinux status
+      command: getenforce
+      register: selinux_status
+      ignore_errors: true
+
+    - name: Print SELinux status
+      debug:
+        msg: "SELinux: {{ selinux_status.stdout | default('Not installed') }}"
+
+    - name: Check firewall service
+      service_facts:
+
+    - name: Show firewall status
+      debug:
+        msg: >
+          Firewall running:
+          {{ 'firewalld.service' in ansible_facts.services and
+             ansible_facts.services['firewalld.service'].state == 'running' }}
