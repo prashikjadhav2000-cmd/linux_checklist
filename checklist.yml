@@ -38,7 +38,7 @@
         var: disk_usage.stdout_lines
 
     - name: Show uptime
-      shell: uptime
+      command: /usr/bin/uptime
       register: uptime_out
       ignore_errors: yes
 
