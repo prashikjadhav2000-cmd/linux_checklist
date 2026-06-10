@@ -1,5 +1,5 @@
 - name: Linux System Checklist
-  hosts: all
+  hosts: localhost
   gather_facts: true
   become: false   # set true only if needed
 
