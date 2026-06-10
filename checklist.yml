@@ -38,7 +38,7 @@
         var: disk_usage.stdout_lines
 
     - name: Show uptime
-      command: uptime
+      shell: uptime
       register: uptime_out
 
     - name: Print uptime
