@@ -1,0 +1,8 @@
+---
+- name: Restart Apache
+  hosts: localhost
+  tasks:
+    - name: Restart httpd
+      ansible.builtin.service:
+        name: httpd
+        state: restarted
