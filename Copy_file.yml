@@ -1,6 +1,8 @@
 ---
 - name: copy file on target hosts
   hosts: localhost
+  vars:
+    scp_command: "shpass -p 'x' scp -o StrictHostKeyChecking=no /home/ansible/list-PocIP ansible@192.168.10.240:/tmp" 
   tasks:
 
     - debug:
@@ -11,8 +13,7 @@
 
     - name: Run SSH command and copy file
       shell: |
-        sshpass -p 'x' ssh -o StrictHostKeyChecking=no ansible@192.168.10.229 "ls -l /home/ansible/list-PocIP" 
-        ls -l /home/ansible/list-PocIP
+        sshpass -p 'x' ssh -o StrictHostKeyChecking=no ansible@192.168.10.229 "{{scp_command}}" 
         
     # - name: Ensure file exist or not 
     #   command: ls -l /home/ansible/list-PocIP
