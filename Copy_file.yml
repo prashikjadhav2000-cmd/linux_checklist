@@ -10,6 +10,10 @@
       command: "{{scp_command}}"
       register: command_output
 
+    - name: copy file from target host to local
+      command: "{{rev_scp}}"
+      register: rev_scp_output  
+
     # - name: Run SSH command and copy file
     #   shell: |
     #     sshpass -p 'x' ssh -o StrictHostKeyChecking=no ansible@192.168.10.229 "{{scp_command}}" 
