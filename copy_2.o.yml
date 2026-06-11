@@ -2,18 +2,8 @@
 - name: copy file on target hosts
   hosts: localhost
   become: true
-  tasks:
-    
-    - name: Set /tmp permissions to 1777
-      ansible.builtin.file:
-        path: /tmp
-        state: directory
-        mode: '01777'
-        owner: root
-        group: root
-    
-        
+  tasks:        
 
     - name: check files are available or not
-      command: audo ls -l /tmp
+      command: ls -ld /tmp
       register: command_output
