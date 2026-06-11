@@ -5,6 +5,7 @@
   tasks:    
     - name: check file exist or not
       command: ls -ld /tmp
+      delegate_to: localhost
       
     - name: Copy file with owner and permissions
       ansible.builtin.copy:
