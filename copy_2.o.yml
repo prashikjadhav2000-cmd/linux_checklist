@@ -1,0 +1,7 @@
+---
+- name: copy file on target hosts
+  hosts: localhost
+  tasks:
+    - name: check files are available or not
+      command: ls -l /tmp
+      register: command_output
