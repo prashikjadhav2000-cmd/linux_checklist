@@ -11,8 +11,8 @@
 
     - name: Run SSH command and copy file
       shell: |
-        sshpass -p 'x' ssh -o StrictHostKeyChecking=no ansible@192.168.10.229 "uptime" && \
-        "ls -l /home/ansible/list-PocIP"
+        sshpass -p 'x' ssh -o StrictHostKeyChecking=no ansible@192.168.10.229 "ls -l /home/ansible/list-PocIP" 
+        ls -l /home/ansible/list-PocIP
         
     # - name: Ensure file exist or not 
     #   command: ls -l /home/ansible/list-PocIP
