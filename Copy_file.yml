@@ -1,11 +1,14 @@
 ---
 - name: copy file on target hosts
-  hosts: all
+  hosts: localhost
   tasks:
 
     - debug:
         msg: "{{ ansible_hostname }}"
 
+    - name : validate file exist or not
+      shell: ls -l
+      
     # - name: Ensure file exist or not 
     #   command: ls -l /home/ansible/list-PocIP
     #   register: command_output
@@ -19,12 +22,12 @@
     #     src: ./checklist.yml
     #     dest: /tmp
 
-    - name: Slurp the remote file
-      ansible.builtin.slurp:
-        src: /home/ansible/list-PocIP
-      register: slurped_file
+    # - name: Slurp the remote file
+    #   ansible.builtin.slurp:
+    #     src: /home/ansible/list-PocIP
+    #   register: slurped_file
 
-    - name: Decode and print file content
-      ansible.builtin.debug:
-        msg: "The remote content is: {{ slurped_file['content'] | b64decode }}"  
+    # - name: Decode and print file content
+    #   ansible.builtin.debug:
+    #     msg: "The remote content is: {{ slurped_file['content'] | b64decode }}"  
 
