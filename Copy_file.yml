@@ -3,7 +3,7 @@
   hosts: localhost
   vars:
     scp_command: "sshpass -p 'x' scp -o StrictHostKeyChecking=no /home/ansible/list-PocIP ansible@192.168.10.240:/tmp" 
-    rev_scp: "sshpass -p 'x' StrictHostKeyChecking=no ansible@192.168.10.240:/tmp/checklist.yml /home/ansible"  
+    rev_scp: "sshpass -p 'x' scp -o StrictHostKeyChecking=no ansible@192.168.10.240:/tmp/checklist.yml /home/ansible/"  
   tasks:
 
     - debug:
