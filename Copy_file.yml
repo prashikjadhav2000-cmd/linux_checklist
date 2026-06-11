@@ -1,24 +1,22 @@
 ---
 - name: copy file on target hosts
-  hosts: localhost
+  hosts: targets
   vars:
     scp_command: "sshpass -p 'x' scp -o StrictHostKeyChecking=no /home/ansible/list-PocIP ansible@192.168.10.240:/tmp" 
     rev_scp: "sshpass -p 'x' scp -o StrictHostKeyChecking=no ansible@192.168.10.240:/tmp/checklist.yml /home/ansible/"  
   tasks:
 
-    - debug:
-        msg: "{{ ansible_hostname }}"
+    - name: copy file to target hosts
+      command: "{{scp_command}}"
+      register: command_output
 
-    # - name : validate file exist or not
-    #   shell: ssh ansible@192.168.10.229 
+    # - name: Run SSH command and copy file
+    #   shell: |
+    #     sshpass -p 'x' ssh -o StrictHostKeyChecking=no ansible@192.168.10.229 "{{scp_command}}" 
 
-    - name: Run SSH command and copy file
-      shell: |
-        sshpass -p 'x' ssh -o StrictHostKeyChecking=no ansible@192.168.10.229 "{{scp_command}}" 
-
-    - name: Run reverse scp command to copy file on local server 
-      shell: |
-        sshpass -p 'x' ssh -o StrictHostKeyChecking=no ansible@192.168.10.229 "{{rev_scp}}"    
+    # - name: Run reverse scp command to copy file on local server 
+    #   shell: |
+    #     sshpass -p 'x' ssh -o StrictHostKeyChecking=no ansible@192.168.10.229 "{{rev_scp}}"    
         
     # - name: Ensure file exist or not 
     #   command: ls -l /home/ansible/list-PocIP
