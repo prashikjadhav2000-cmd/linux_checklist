@@ -3,6 +3,15 @@
   hosts: localhost
   become: true
   tasks:
+    - name: Create a directory with permissions
+      ansible.builtin.file:
+        path: /tmp
+        state: directory
+        mode: '0755'
+        owner: ansible
+        group: ansible
+    
+
     - name: check files are available or not
       command: audo ls -l /tmp
       register: command_output
