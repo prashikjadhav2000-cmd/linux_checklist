@@ -7,8 +7,8 @@
         msg: "{{ ansible_hostname }}"
 
     - name : validate file exist or not
-      shell: ls -l
-      
+      shell: pwd
+
     # - name: Ensure file exist or not 
     #   command: ls -l /home/ansible/list-PocIP
     #   register: command_output
