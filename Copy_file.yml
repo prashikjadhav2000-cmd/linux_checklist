@@ -5,5 +5,5 @@
   tasks:
     - name: copy the file on target hosts
       ansible.builtin.copy:
-      src: /home/ansible/list-PocIP
-      dest: /tmp
+        src: /home/ansible/list-PocIP
+        dest: /tmp
