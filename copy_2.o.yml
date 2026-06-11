@@ -5,5 +5,5 @@
   tasks:        
 
     - name: check files are available or not
-      command: ls -ld /tmp
+      command: ls /tmp
       register: command_output
