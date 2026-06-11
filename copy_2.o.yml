@@ -9,7 +9,7 @@
         state: directory
 
     - name: change file permissions
-      command: "chown root:root /tmp"    
+      command: "sudo chown root:root /tmp"    
         
 
     - name: check files are available or not
