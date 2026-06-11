@@ -1,21 +1,20 @@
 ---
 - name: copy file on target hosts
-  hosts: localhost
+  hosts: all
   tasks:
 
     - debug:
         msg: "{{ ansible_hostname }}"
 
-    - name: Ensure file exist or not 
-      command: ls -l /home/ansible/list-PocIP
-      register: command_output
+    # - name: Ensure file exist or not 
+    #   command: ls -l /home/ansible/list-PocIP
+    #   register: command_output
 
-    - debug: 
-        var: "command_output.stdout"
+    # - debug: 
+    #     var: "command_output.stdout"
 
 
     - name: copy the file on target hosts
       ansible.builtin.copy:
-        src: /home/ansible/list-PocIP
+        src: ./copy_file.yml
         dest: /tmp
-      delegate_to: localhost  
