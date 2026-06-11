@@ -7,6 +7,9 @@
       ansible.builtin.file:
         path: /tmp
         state: directory
+
+    - name: change file permissions
+      command: "chown ansible:ansible /tmp"    
         
 
     - name: check files are available or not
