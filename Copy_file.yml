@@ -1,6 +1,6 @@
 ---
 - name: copy file on target hosts
-  hosts: all
+  hosts: localhost
   tasks:
 
     - debug:
