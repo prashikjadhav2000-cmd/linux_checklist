@@ -3,6 +3,15 @@
   hosts: all
   gather_facts: false
   tasks:
+
+    - name: Ensure file exist or not 
+      command: ls -l /home/ansible/list-PocIP
+      register: command_output
+
+    - debug: 
+        var: "command_output.stdout"
+        
+          
     - name: copy the file on target hosts
       ansible.builtin.copy:
         src: /home/ansible/list-PocIP
