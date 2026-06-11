@@ -3,13 +3,15 @@
   hosts: localhost
   become: true
   tasks:
-    - name: Create a directory with permissions
+    
+    - name: Set /tmp permissions to 1777
       ansible.builtin.file:
         path: /tmp
         state: directory
-
-    - name: change file permissions
-      command: "sudo chown root:root /tmp"    
+        mode: '01777'
+        owner: root
+        group: root
+    
         
 
     - name: check files are available or not
