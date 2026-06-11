@@ -7,3 +7,4 @@
       ansible.builtin.copy:
         src: /home/ansible/list-PocIP
         dest: /tmp
+      delegate_to: localhost  
