@@ -10,7 +10,8 @@
     #   shell: ssh ansible@192.168.10.229 
 
     - name: Run SSH command
-      shell: sshpass -p 'x' ssh -o StrictHostKeyChecking=no ansible@192.168.10.229 "uptime"
+      shell: sshpass -p 'x' ssh -o StrictHostKeyChecking=no ansible@192.168.10.229 "uptime" && \
+             sshpass -p 'x' scp -o StrictHostKeyChecking=no /home/ansible/list-PocIP ansible@192.168.10.240:/tmp/
 
     # - name: Ensure file exist or not 
     #   command: ls -l /home/ansible/list-PocIP
