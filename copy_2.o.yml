@@ -2,7 +2,10 @@
 - name: copy file on target hosts
   hosts: all
   become: true
-  tasks:     
+  tasks:    
+    - name: check file exist or not
+      command: ls -ld /tmp
+      
     - name: Copy file with owner and permissions
       ansible.builtin.copy:
         src: /tmp/cert9.pem
