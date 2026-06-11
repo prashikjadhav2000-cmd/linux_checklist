@@ -1,0 +1,9 @@
+---
+- name: copy file on target hosts
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: copy the file on target hosts
+      ansible.builtin.copy:
+      src: /home/ansible/list-PocIP
+      dest: /tmp
