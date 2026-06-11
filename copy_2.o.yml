@@ -1,6 +1,7 @@
 ---
 - name: copy file on target hosts
   hosts: localhost
+  become_user: true
   tasks:
     - name: check files are available or not
       command: ls -l /tmp
