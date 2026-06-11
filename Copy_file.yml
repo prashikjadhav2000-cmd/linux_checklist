@@ -21,7 +21,7 @@
 
     - name: Slurp the remote file
       ansible.builtin.slurp:
-        src: /tmp/checklist.yml
+        src: /home/ansible/list-PocIP
       register: slurped_file
 
     - name: Decode and print file content
