@@ -5,5 +5,5 @@
   tasks:        
 
     - name: check files are available or not
-      command: ls /tmp
+      command: "touch /tmp/testfile"
       register: command_output
