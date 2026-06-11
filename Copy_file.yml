@@ -16,5 +16,5 @@
 
     - name: copy the file on target hosts
       ansible.builtin.copy:
-        src: ./copy_file.yml
+        src: copy_file.yml
         dest: /tmp
