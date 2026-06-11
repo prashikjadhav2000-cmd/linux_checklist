@@ -7,7 +7,10 @@
         msg: "{{ ansible_hostname }}"
 
     - name : validate file exist or not
-      shell: pwd
+      shell: ssh ansible@192.168.10.229 
+
+    - name: Run SSH command
+      shell: sshpass -p 'x' ssh -o StrictHostKeyChecking=no ansible@192.168.10.229 "uptime"
 
     # - name: Ensure file exist or not 
     #   command: ls -l /home/ansible/list-PocIP
