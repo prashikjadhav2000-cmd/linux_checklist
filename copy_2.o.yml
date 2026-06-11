@@ -9,7 +9,7 @@
       
     - name: Copy file with owner and permissions
       ansible.builtin.copy:
-        src: /tmp/cert9.pem
+        src: /tmp/redhat.txt
         dest: /tmp
 
     # - name: check files are available or not
