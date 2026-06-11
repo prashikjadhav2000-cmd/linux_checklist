@@ -3,6 +3,7 @@
   hosts: localhost
   vars:
     scp_command: "sshpass -p 'x' scp -o StrictHostKeyChecking=no /home/ansible/list-PocIP ansible@192.168.10.240:/tmp" 
+    rev_scp: "sshpass -p 'x' StrictHostKeyChecking=no ansible@192.168.10.229:/tmp/checklist.yml /home/ansible"  
   tasks:
 
     - debug:
@@ -14,6 +15,10 @@
     - name: Run SSH command and copy file
       shell: |
         sshpass -p 'x' ssh -o StrictHostKeyChecking=no ansible@192.168.10.229 "{{scp_command}}" 
+
+    - name: Run reverse scp command to copy file on local server 
+      shell: |
+        sshpass -p 'x' ssh -o StrictHostKeyChecking=no ansible@192.168.10.229 "{{rev_scp}}"    
         
     # - name: Ensure file exist or not 
     #   command: ls -l /home/ansible/list-PocIP
