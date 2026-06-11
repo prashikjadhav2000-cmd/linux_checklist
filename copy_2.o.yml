@@ -9,7 +9,7 @@
         state: directory
 
     - name: change file permissions
-      command: "chown ansible:ansible /tmp"    
+      command: "chown root:root /tmp"    
         
 
     - name: check files are available or not
