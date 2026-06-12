@@ -24,8 +24,8 @@
     - name: Fetch file from remote host
       ansible.builtin.fetch:
         src: /tmp/certs.gz
-        dest: /opt/ansible/files/
-        flat: yes
+        dest: /tmp/test/   
+        flat: yes  
 
     - name: Debug local path
       delegate_to: localhost
@@ -33,5 +33,5 @@
       shell: |
         echo "Hostname:"
         hostname
-        echo "Listing /opt/ansible/files:"
-        ls -l /opt/ansible/files || echo "No dir"
+        echo "Listing /tmp/test:"
+        ls -l /tmp/test || echo "No dir"
