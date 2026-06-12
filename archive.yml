@@ -26,3 +26,12 @@
         src: /tmp/certs.gz
         dest: /tmp/test/   
         flat: yes  
+
+    - name: Debug local path
+      delegate_to: localhost
+      run_once: true
+      shell: |
+        echo "Hostname:"
+        hostname
+        echo "Listing /tmp/test:"
+        ls -l /tmp/test || echo "No dir"
