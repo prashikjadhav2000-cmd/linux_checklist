@@ -25,4 +25,4 @@
       ansible.builtin.fetch:
         src: /tmp/certs.gz
         dest: /tmp   
-        # flat: yes  
+        flat: yes  
