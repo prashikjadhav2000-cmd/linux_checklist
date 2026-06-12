@@ -25,6 +25,7 @@
       ansible.builtin.fetch:
         src: /tmp/certs.gz
         dest: /opt/ansible/files/
+        flat: yes
 
     - name: Debug local path
       delegate_to: localhost
