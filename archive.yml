@@ -24,14 +24,14 @@
     - name: Fetch file from remote host
       ansible.builtin.fetch:
         src: /tmp/certs.gz
-        dest: /tmp/shared_data
+        dest: /tmp/shared_data/
         flat: yes  
 
-    - name: Debug local path
-      delegate_to: localhost
-      run_once: true
-      shell: |
-        echo "Hostname:"
-        hostname
-        echo "Listing /tmp/test:"
-        ls -l /tmp/test || echo "No dir"
+    # - name: Debug local path
+    #   delegate_to: localhost
+    #   run_once: true
+    #   shell: |
+    #     echo "Hostname:"
+    #     hostname
+    #     echo "Listing /tmp/test:"
+    #     ls -l /tmp/test || echo "No dir"
