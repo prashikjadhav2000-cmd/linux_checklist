@@ -14,3 +14,14 @@
       ansible.builtin.copy:
         src: /tmp/certs.gz
         dest: /tmp/certs.gz
+
+    # - name: Unarchive a file that is already on the remote machine
+    #   ansible.builtin.unarchive:
+    #     src: /tmp/certs.gz
+    #     dest: /home/ansible
+    #     remote_src: yes    
+
+    - name: Fetch file from remote host
+      ansible.builtin.fetch:
+        src: /tmp/certs.gz
+        dest: /home/ansible    
