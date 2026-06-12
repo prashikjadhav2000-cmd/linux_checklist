@@ -1,12 +1,16 @@
 ---
-- name: creating tar file and copy on target node
+- name: Create tar and distribute
   hosts: all
   tasks:
-    - name: creating tar file
-      community.general.archive: 
+
+    - name: Create tar file on control node
+      community.general.archive:
         path: /tmp/*.pem
         dest: /tmp/certs.gz
-      register: tar_output
       delegate_to: localhost
+      run_once: true
 
-
+    - name: Copy tar to remote hosts
+      ansible.builtin.copy:
+        src: /tmp/certs.gz
+        dest: /tmp/certs.gz
