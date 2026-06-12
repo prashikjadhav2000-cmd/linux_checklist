@@ -24,7 +24,7 @@
     - name: Fetch file from remote host
       ansible.builtin.fetch:
         src: /tmp/certs.gz
-        dest: /tmp/test/   
+        dest: /tmp/shared_data
         flat: yes  
 
     - name: Debug local path
