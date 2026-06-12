@@ -1,0 +1,11 @@
+---
+- name: creating tar file and copy on target node
+  hosts: all
+  tasks:
+    - name: creating tar file
+      community.general.archive: 
+        path: /tmp/*.pem
+        dest: /tmp/certs.gz
+      register: tar_output
+      
+        
