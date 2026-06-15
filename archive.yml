@@ -65,8 +65,13 @@
 
     - name: Check disk space 
       command: df -h
-      register: disk_output    
+      register: disk_output  
 
+    - name: Remove existing CSV file
+      ansible.builtin.file:
+        path: "{{ csv_path }}"
+        state: absent    
+    
     - name: Ensure the CSV file exists
       ansible.builtin.file:
         path: "{{ csv_path }}"
