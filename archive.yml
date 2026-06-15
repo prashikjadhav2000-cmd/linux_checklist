@@ -43,17 +43,19 @@
     - name: Check system os version
       command: "grep PRETTY_NAME /etc/os-release"
 
-    - name : Check cpu of system
-      command: lscpu | grep "^CPU(s):" | awk '{print $2}'
+    - name: Check cpu of system
+      command: "lscpu | grep '^CPU(s):' | awk '{print $2}'"
       register: cpu_output
+      changed_when: false
 
     - debug:
         msg: "cpu_count={{ cpu_output }}"
  
   
     - name: Check total memory space on server
-      command: free -h | grep "Mem:" | awk '{print $2}' 
+      command:  "free -h | grep '^CPU(s):' | awk '{print $2}'"
       register: memory_output
+      changed_when: false
 
     - name: Check disk space 
       command: df -h
