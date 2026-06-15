@@ -52,9 +52,9 @@
  
   
     - name: Check total memory space on server
-      coammand: free -h | grep "Mem:" | awk '{print $2}'
+      command: free -h | grep "Mem:" | awk '{print $2}' 
       register: memory_output
 
     - name: Check disk space 
-      coammand: df -h
+      command: df -h
       register: disk_output    
