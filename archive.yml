@@ -3,17 +3,17 @@
   hosts: all
   tasks:
 
-    - name: Create tar file on control node
-      community.general.archive:
-        path: /tmp/*.pem
-        dest: /tmp/certs.gz
-      delegate_to: localhost
-      run_once: true
+    # - name: Create tar file on control node
+    #   community.general.archive:
+    #     path: /tmp/*.pem
+    #     dest: /tmp/certs.gz
+    #   delegate_to: localhost
+    #   run_once: true
 
-    - name: Copy tar to remote hosts
-      ansible.builtin.copy:
-        src: /tmp/certs.gz
-        dest: /tmp/certs.gz
+    # - name: Copy tar to remote hosts
+    #   ansible.builtin.copy:
+    #     src: /tmp/certs.gz
+    #     dest: /tmp/certs.gz
 
     # - name: Unarchive a file that is already on the remote machine
     #   ansible.builtin.unarchive:
@@ -21,17 +21,40 @@
     #     dest: /home/ansible
     #     remote_src: yes    
 
-    - name: Fetch file from remote host
-      ansible.builtin.fetch:
-        src: /tmp/certs.gz
-        dest: /tmp/test/   
-        flat: yes  
+    # - name: Fetch file from remote host
+    #   ansible.builtin.fetch:
+    #     src: /tmp/certs.gz
+    #     dest: /tmp/
+    #     flat: yes  
 
-    - name: Debug local path
-      delegate_to: localhost
-      run_once: true
-      shell: |
-        echo "Hostname:"
-        hostname
-        echo "Listing /tmp/test:"
-        ls -l /tmp/test || echo "No dir"
+    # - name: Debug local path
+    #   delegate_to: localhost
+    #   run_once: true
+    #   shell: |
+    #     echo "Hostname:"
+    #     hostname
+    #     echo "Listing /tmp/test:"
+    #     ls -l /tmp/test || echo "No dir"
+
+    - name: Run hostname command
+      command: hostname
+      register: hostname_output
+
+    - name: Check system os version
+      command: "grep PRETTY_NAME /etc/os-release"
+
+    - name : Check cpu of system
+      command: lscpu | grep "^CPU(s):" | awk '{print $2}'
+      register: cpu_output
+
+    - debug:
+        msg: "cpu_count={{ cpu_output }}"
+ 
+  
+    - name: Check total memory space on server
+      coammand: free -h | grep "Mem:" | awk '{print $2}'
+      register: memory_output
+
+    - name: Check disk space 
+      coammand: df -h
+      register: disk_output    
