@@ -1,6 +1,8 @@
 ---
 - name: Create tar and distribute
   hosts: all
+  vars:
+    csv_path: "/tmp/report.csv"
   tasks:
 
     # - name: Create tar file on control node
@@ -42,6 +44,7 @@
 
     - name: Check system os version
       command: "grep PRETTY_NAME /etc/os-release"
+      register: os_output
 
     - name: Check cpu of system
       shell: "lscpu | grep '^CPU(s):' | awk '{print $2}'"
@@ -58,8 +61,27 @@
       changed_when: false
     
     - debug:
-        msg: "memory_size={{ cpu_output.stdout }}"
+        msg: "memory_size={{ memory_output.stdout }}"
 
     - name: Check disk space 
       command: df -h
       register: disk_output    
+
+    - name: Ensure the CSV file exists
+      ansible.builtin.file:
+        path: "{{ csv_path }}"
+        state: touch
+
+    - name: Insert CSV header at the beginning of the file
+      ansible.builtin.lineinfile:
+        path: "{{ csv_path }}"
+        line: "hostname,os_version,cpu_value,memory_size,Disk_space"
+        insertbefore: BOF
+        state: present  
+
+    - name: Append data row (Example loop or single entry)
+      ansible.builtin.lineinfile:
+        path: "{{ csv_path }}"
+        line: "{{hostname_output.stdout}},{{os_output.stdout}},{{cpu_output.stdout}},{{memory_output.stdout}},{{disk_output.stdout}}"
+        insertafter: EOF
+        state: present    
