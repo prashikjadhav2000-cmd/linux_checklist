@@ -82,6 +82,6 @@
     - name: Append data row (Example loop or single entry)
       ansible.builtin.lineinfile:
         path: "{{ csv_path }}"
-        line: "{{hostname_output.stdout}},{{os_output.stdout}},{{cpu_output.stdout}},{{memory_output.stdout}},{{disk_output.stdout}}"
+        line: "{{hostname_output.stdout}},{{os_output.stdout}},{{cpu_output.stdout}},{{memory_output.stdout}},{{disk_output.stdout | replace('\n', ' | ')}}"
         insertafter: EOF
         state: present    
