@@ -49,13 +49,16 @@
       changed_when: false
 
     - debug:
-        msg: "cpu_count={{ cpu_output }}"
+        msg: "cpu_count={{ cpu_output.stdout }}"
  
   
     - name: Check total memory space on server
       shell:  "free -h | grep '^CPU(s):' | awk '{print $2}'"
       register: memory_output
       changed_when: false
+    
+    - debug:
+        msg: "memory_size={{ cpu_output.stdout }}"
 
     - name: Check disk space 
       command: df -h
