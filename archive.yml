@@ -43,7 +43,7 @@
       register: hostname_output
 
     - name: Check system os version
-      command: "grep PRETTY_NAME /etc/os-release | cut -d= -f2"
+      shell: "grep PRETTY_NAME /etc/os-release | cut -d= -f2"
       register: os_output
 
     - name: Check cpu of system
