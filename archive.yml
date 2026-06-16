@@ -43,7 +43,7 @@
       register: hostname_output
 
     - name: Check system os version
-      command: "grep PRETTY_NAME /etc/os-release"
+      command: "grep PRETTY_NAME /etc/os-release | cut -d= -f2"
       register: os_output
 
     - name: Check cpu of system
@@ -56,7 +56,7 @@
  
   
     - name: Check total memory space on server
-      shell:  "free -h | grep '^CPU(s):' | awk '{print $2}'"
+      shell:  "free -h | grep '^Mem:' | awk '{print $2}'"
       register: memory_output
       changed_when: false
     
@@ -64,7 +64,7 @@
         msg: "memory_size={{ memory_output.stdout }}"
 
     - name: Check disk space 
-      command: df -h
+      command: lsblk -d -o NAME,SIZE
       register: disk_output  
 
     - name: Remove existing CSV file
