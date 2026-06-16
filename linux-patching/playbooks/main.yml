@@ -1,0 +1,4 @@
+# playbooks/main.yml
+- import_playbook: precheck.yml
+- import_playbook: patching.yml
+- import_playbook: postcheck.yml

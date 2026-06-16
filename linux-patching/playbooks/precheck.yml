@@ -1,0 +1,70 @@
+# playbooks/precheck.yml
+- name: Precheck before patching
+  hosts: all
+  become: yes
+  gather_facts: yes
+
+  tasks:
+
+    - name: Check uptime
+      command: uptime -p
+      register: uptime_output
+
+    - name: Show uptime
+      debug:
+        var: uptime_output.stdout
+
+    - name: Check disk usage
+      command: df -h
+      register: disk_usage
+
+    - name: Display disk usage
+      debug:
+        var: disk_usage.stdout_lines
+
+    - name: Check memory
+      command: free -m
+      register: memory_usage
+
+    - name: Display memory
+      debug:
+        var: memory_usage.stdout_lines
+
+    - name: Check running services (Linux generic)
+      command: systemctl list-units --type=service --state=running
+      register: services
+
+    - name: Show running services
+      debug:
+        var: services.stdout_lines
+
+    # RHEL/CentOS
+    - name: Check available updates (YUM)
+      yum:
+        list: updates
+      register: yum_updates
+      when: ansible_os_family == "RedHat"
+
+    # Ubuntu/Debian
+    - name: Check available updates (APT)
+      apt:
+        update_cache: yes
+      when: ansible_os_family == "Debian"
+
+    - name: List APT upgrades
+      command: apt list --upgradeable
+      register: apt_updates
+      when: ansible_os_family == "Debian"
+
+    - name: Display updates
+      debug:
+        msg: "{{ yum_updates.results | default(apt_updates.stdout_lines) }}"
+
+    - name: Save precheck report
+      copy:
+        content: |
+          Uptime: {{ uptime_output.stdout }}
+          Disk: {{ disk_usage.stdout }}
+          Memory: {{ memory_usage.stdout }}
+        dest: /tmp/precheck_report.txt
+``

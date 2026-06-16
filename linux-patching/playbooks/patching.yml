@@ -1,0 +1,45 @@
+# playbooks/patching.yml
+- name: Apply patches
+  hosts: all
+  become: yes
+
+  tasks:
+
+    - name: Apply updates using YUM
+      yum:
+        name: '*'
+        state: latest
+      when: ansible_os_family == "RedHat"
+      register: yum_result
+
+    - name: Apply updates using APT
+      apt:
+        upgrade: dist
+        update_cache: yes
+      when: ansible_os_family == "Debian"
+      register: apt_result
+
+    - name: Check if reboot required (Debian)
+      stat:
+        path: /var/run/reboot-required
+      register: reboot_required_apt
+      when: ansible_os_family == "Debian"
+
+    - name: Set reboot flag
+      set_fact:
+        reboot_required: true
+      when:
+        - ansible_os_family == "Debian"
+        - reboot_required_apt.stat.exists
+
+    - name: Reboot system if needed
+      reboot:
+        msg: "Reboot after patching"
+        connect_timeout: 5
+        reboot_timeout: 600
+      when: reboot_required | default(true)
+
+    - name: Wait for system to come back
+      wait_for_connection:
+        delay: 30
+        timeout: 300

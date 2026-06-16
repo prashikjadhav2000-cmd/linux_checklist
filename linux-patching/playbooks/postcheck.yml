@@ -1,0 +1,53 @@
+# playbooks/postcheck.yml
+- name: Postcheck after patching
+  hosts: all
+  become: yes
+  gather_facts: yes
+
+  tasks:
+
+    - name: Check uptime after reboot
+      command: uptime -p
+      register: uptime_after
+
+    - name: Verify uptime reset
+      debug:
+        var: uptime_after.stdout
+
+    - name: Check disk again
+      command: df -h
+      register: disk_after
+
+    - name: Check memory again
+      command: free -m
+      register: memory_after
+
+    - name: Verify critical services
+      systemd:
+        name: sshd
+        state: started
+
+    - name: Check failed services
+      command: systemctl --failed
+      register: failed_services
+
+    - name: Display failed services
+      debug:
+        var: failed_services.stdout_lines
+
+    - name: Check kernel version
+      command: uname -r
+      register: kernel
+
+    - name: Show kernel version
+      debug:
+        var: kernel.stdout
+
+    - name: Save postcheck report
+      copy:
+        content: |
+          Uptime: {{ uptime_after.stdout }}
+          Kernel: {{ kernel.stdout }}
+          Disk: {{ disk_after.stdout }}
+          Memory: {{ memory_after.stdout }}
+        dest: /tmp/postcheck_report.txt
