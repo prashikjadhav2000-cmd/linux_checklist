@@ -64,7 +64,7 @@
         msg: "memory_size={{ memory_output.stdout }}"
 
     - name: Check disk space 
-      command: lsblk -d -o NAME,SIZE
+      command: lsblk -dn -o NAME,SIZE
       register: disk_output  
 
     - name: Remove existing CSV file
