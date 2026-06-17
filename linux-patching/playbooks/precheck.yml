@@ -60,11 +60,11 @@
       debug:
         msg: "{{ yum_updates.results | default(apt_updates.stdout_lines) }}"
 
-    - name: Save precheck report
-      copy:
-        content: |
-          Uptime: {{ uptime_output.stdout }}
-          Disk: {{ disk_usage.stdout }}
-          Memory: {{ memory_usage.stdout }}
-        dest: /tmp/precheck_report.txt
-``
+#     - name: Save precheck report
+#       copy:
+#         content: |
+#           Uptime: {{ uptime_output.stdout }}
+#           Disk: {{ disk_usage.stdout }}
+#           Memory: {{ memory_usage.stdout }}
+#         dest: /tmp/precheck_report.txt
+# ``
