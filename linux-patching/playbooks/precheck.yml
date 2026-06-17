@@ -68,4 +68,3 @@
           Disk: {{ disk_usage.stdout }}
           Memory: {{ memory_usage.stdout }}
         dest: /tmp/precheck_report.txt
-``
