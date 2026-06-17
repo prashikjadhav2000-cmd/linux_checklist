@@ -6,9 +6,10 @@
   tasks:
 
     - name: Apply updates using YUM
-      yum:
+      dnf:
         name: '*'
         state: latest
+        security : true
       when: ansible_os_family == "RedHat"
       register: yum_result
 
