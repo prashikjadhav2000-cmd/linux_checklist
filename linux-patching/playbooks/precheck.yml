@@ -42,6 +42,7 @@
     - name: Check available updates (YUM)
       yum:
         list: updates
+        disablerepo: Local-BaseOS
       register: yum_updates
       when: ansible_os_family == "RedHat"
 
