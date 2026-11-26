@@ -5,7 +5,7 @@
 
   vars:
     inactivity_days: 1
-    inactivity_seconds: "{{ inactivity_days | int * 86400 }}"
+    inactivity_seconds: "{{ inactivity_days | int * 8 }}"
 
   tasks:
 
