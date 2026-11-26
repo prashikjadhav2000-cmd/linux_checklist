@@ -4,43 +4,42 @@
   gather_facts: true
 
   vars:
-    inactivity_days: 1
-    inactivity_seconds: "{{ inactivity_days | int * 8 }}"
+    inactivity_days: 30
+    inactivity_seconds: "{{ inactivity_days | int * 86400 }}"
 
   tasks:
 
-    - name: Get all enabled users
-      shell: |
-        ipa user-find --all --raw | \
-        awk '/uid: / {print $2}'
+    - name: Get all users
+      shell: ipa user-find --all --raw | awk '/uid: / {print $2}'
       register: ipa_users
       changed_when: false
 
     - name: Collect last login information
       shell: |
         ipa user-show {{ item }} --all --raw | \
-        grep '^krbLastSuccessfulAuth:' | awk '{print $2}'
+        awk '/^krbLastSuccessfulAuth:/ {print $2}'
       loop: "{{ ipa_users.stdout_lines }}"
       register: user_auth
       changed_when: false
       failed_when: false
 
-    - name: Build inactive users list
+    - name: Display last login values
+      debug:
+        msg: "{{ item.item }} -> {{ item.stdout }}"
+      loop: "{{ user_auth.results }}"
+
+    - name: Build inactive user list
       set_fact:
         inactive_users: "{{ inactive_users | default([]) + [item.item] }}"
       loop: "{{ user_auth.results }}"
       when:
-        - item.stdout != ""
-        - >
-          (
-            (ansible_date_time.epoch | int) -
-            (
-              item.stdout |
-              to_datetime('%Y%m%d%H%M%SZ')
-            ).strftime('%s') | int
-          ) > inactivity_seconds
+        - item.item != 'admin'
+        - item.stdout | length > 0
+        - ((ansible_date_time.epoch | int) -
+          ((item.stdout | to_datetime('%Y%m%d%H%M%SZ')).strftime('%s') | int))
+          > inactivity_seconds
 
-    - name: Show users to be disabled
+    - name: Show inactive users
       debug:
         msg: "User {{ item }} inactive for more than {{ inactivity_days }} days"
       loop: "{{ inactive_users | default([]) }}"
