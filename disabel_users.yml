@@ -1,0 +1,57 @@
+---
+- name: Disable IdM users inactive for 30 days
+  hosts: localhost
+  gather_facts: true
+
+  vars:
+    inactivity_days: 30
+    inactivity_seconds: "{{ inactivity_days | int * 86400 }}"
+
+  tasks:
+
+    - name: Get all enabled users
+      shell: |
+        ipa user-find --all --raw | \
+        awk '/uid: / {print $2}'
+      register: ipa_users
+      changed_when: false
+
+    - name: Collect last login information
+      shell: |
+        ipa user-show {{ item }} --all --raw | \
+        grep '^krbLastSuccessfulAuth:' | awk '{print $2}'
+      loop: "{{ ipa_users.stdout_lines }}"
+      register: user_auth
+      changed_when: false
+      failed_when: false
+
+    - name: Build inactive users list
+      set_fact:
+        inactive_users: "{{ inactive_users | default([]) + [item.item] }}"
+      loop: "{{ user_auth.results }}"
+      when:
+        - item.stdout != ""
+        - >
+          (
+            (ansible_date_time.epoch | int) -
+            (
+              item.stdout |
+              to_datetime('%Y%m%d%H%M%SZ')
+            ).strftime('%s') | int
+          ) > inactivity_seconds
+
+    - name: Show users to be disabled
+      debug:
+        msg: "User {{ item }} inactive for more than {{ inactivity_days }} days"
+      loop: "{{ inactive_users | default([]) }}"
+
+    - name: Disable inactive users
+      command: ipa user-disable {{ item }}
+      loop: "{{ inactive_users | default([]) }}"
+      register: disabled_users
+
+    - name: Summary
+      debug:
+        msg: "Disabled user {{ item.item }}"
+      loop: "{{ disabled_users.results | default([]) }}"
+      when: item.rc == 0
