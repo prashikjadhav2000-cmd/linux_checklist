@@ -1,6 +1,6 @@
 ---
 - name: Disable IdM users inactive for 30 days
-  hosts: localhost
+  hosts: all
   gather_facts: true
 
   vars:
