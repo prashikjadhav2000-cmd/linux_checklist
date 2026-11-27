@@ -4,7 +4,7 @@
   gather_facts: true
 
   vars:
-    inactivity_days: 30
+    inactivity_days: 1
     inactivity_seconds: "{{ inactivity_days | int * 86400 }}"
 
   tasks:
