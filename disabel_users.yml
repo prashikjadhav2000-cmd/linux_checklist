@@ -4,7 +4,7 @@
   gather_facts: true
 
   vars:
-    inactivity_days: 30
+    inactivity_days: 1
     inactivity_seconds: "{{ inactivity_days | int * 86400 }}"
 
     ipa_admin_user: admin
@@ -13,37 +13,34 @@
   tasks:
 
     - name: Obtain Kerberos ticket
-      shell: |
-        echo "{{ ipa_admin_password }}" | kinit {{ ipa_admin_user }}
+      expect:
+        command: "kinit {{ ipa_admin_user }}"
+        responses:
+          Password.*: "{{ ipa_admin_password }}"
       no_log: true
-      changed_when: false
 
     - name: Verify Kerberos ticket
       command: klist
       register: kerberos_ticket
       changed_when: false
 
-    - name: Show ticket information
-      debug:
-        var: kerberos_ticket.stdout_lines
-
     - name: Get all users
-      shell: |
-        ipa user-find --all --raw | awk '/uid: / {print $2}'
+      shell: ipa user-find --all --raw | awk '/uid: / {print $2}'
       register: ipa_users
       changed_when: false
 
-    - name: Collect last login information
+    - name: Collect last authentication
       shell: |
-        ipa user-show {{ item }} --all --raw | awk '/^krbLastSuccessfulAuth:/ {print $2}'
+        ipa user-status {{ item }} 2>/dev/null | \
+        awk -F': ' '/Last successful authentication/ {print $2}'
       loop: "{{ ipa_users.stdout_lines }}"
       register: user_auth
       changed_when: false
       failed_when: false
 
-    - name: Display last login values
+    - name: Display authentication dates
       debug:
-        msg: "{{ item.item }} -> {{ item.stdout }}"
+        msg: "{{ item.item }} -> {{ item.stdout | default('Never Logged In') }}"
       loop: "{{ user_auth.results }}"
 
     - name: Build inactive user list
@@ -51,12 +48,17 @@
         inactive_users: "{{ inactive_users | default([]) + [item.item] }}"
       loop: "{{ user_auth.results }}"
       when:
-        - item.item != "admin"
-        - item.stdout | length > 0
+        - item.item not in ['admin']
+        - item.stdout is defined
+        - item.stdout != ""
+        - item.stdout != "N/A"
         - >
-          ((ansible_date_time.epoch | int) -
-          ((item.stdout | to_datetime('%Y%m%d%H%M%SZ')).strftime('%s') | int))
-          > (inactivity_seconds | int)
+          (
+            (ansible_date_time.epoch | int) -
+            (
+              (item.stdout | to_datetime('%Y%m%d%H%M%SZ')).timestamp() | int
+            )
+          ) > (inactivity_seconds | int)
 
     - name: Show inactive users
       debug:
@@ -67,13 +69,17 @@
       command: ipa user-disable {{ item }}
       loop: "{{ inactive_users | default([]) }}"
       register: disabled_users
+      when: inactive_users is defined
 
-    - name: Summary
+    - name: Display disabled users
       debug:
-        msg: "Disabled user {{ item.item }}"
+        msg: "Disabled {{ item.item }}"
       loop: "{{ disabled_users.results | default([]) }}"
-      when: item.rc == 0
+      when:
+        - item.rc is defined
+        - item.rc == 0
 
     - name: Destroy Kerberos ticket
       command: kdestroy
       changed_when: false
+      ignore_errors: true
